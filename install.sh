@@ -26,8 +26,6 @@ pause() {
 # 说明
 echo
 echo -e "$yellow此脚本仅兼容于Debian 10+系统. 如果你的系统不符合,请Ctrl+C退出脚本$none"
-echo -e "可以去 ${cyan}https://github.com/crazypeace/v2ray_wss${none} 查看脚本整体思路和关键命令, 以便针对你自己的系统做出调整."
-echo -e "有问题加群 ${cyan}https://t.me/+D8aqonnCR3s1NTRl${none}"
 echo "本脚本支持带参数执行, 在参数中输入域名, 网络栈, UUID, path. 详见GitHub."
 echo "----------------------------------------------------------------"
 
@@ -64,7 +62,7 @@ if [ $# -ge 1 ]; then
         path=$(echo $v2ray_id | sed 's/.*\([a-z0-9]\{12\}\)$/\1/g')
     fi
 
-    proxy_site="https://zelikk.blogspot.com"
+    proxy_site="https://www.tiktok.com"
 
     echo -e "domain: ${domain}"
     echo -e "netstack: ${netstack}"
