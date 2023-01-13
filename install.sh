@@ -310,7 +310,7 @@ cat >/usr/local/etc/v2ray/config.json <<-EOF
         {
             "listen": "127.0.0.1",
             "port": $v2ray_port,             // ***
-            "protocol": "vless",
+            "protocol": "vmess",
             "settings": {
                 "clients": [
                     {
