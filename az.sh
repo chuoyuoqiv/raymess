@@ -185,7 +185,7 @@ fi
 if [[ -z $v2ray_id2 ]]; then
     uuid2=$(cat /proc/sys/kernel/random/uuid)
     while :; do
-        echo -e "请输入 "$yellow"V2RayID"$none" "
+        echo -e "请输入 "$yellow"V2RayID2"$none" "
         read -p "$(echo -e "(默认ID: ${cyan}${uuid2}$none):")" v2ray_id2
         [ -z "$v2ray_id2" ] && v2ray_id2=$uuid2
         case $(echo $v2ray_id2 | sed 's/[a-z0-9]\{8\}-[a-z0-9]\{4\}-[a-z0-9]\{4\}-[a-z0-9]\{4\}-[a-z0-9]\{12\}//g') in
@@ -292,12 +292,12 @@ fi
 if [[ -z $domain2 ]]; then
     while :; do
         echo
-        echo -e "请输入一个 ${magenta}正确的域名${none} Input your domain"
+        echo -e "请输入一个 ${magenta}正确的域名${none} Input your domain2"
         read -p "(例如: mydomain.com): " domain2
         [ -z "$domain2" ] && error && continue
         echo
         echo
-        echo -e "$yellow 你的域名Domain = $cyan$domain2$none"
+        echo -e "$yellow 你的域名Domain2 = $cyan$domain2$none"
         echo "----------------------------------------------------------------"
         break
     done
@@ -329,15 +329,15 @@ if [[ -z $netstack ]]; then
     echo "如果你不懂这段话是什么意思, 请直接回车"
     read -p "$(echo -e "Input ${cyan}4${none} for IPv4, ${cyan}6${none} for IPv6:") " netstack2
     if [[ $netstack2 == "4" ]]; then
-        domain_resolve2=$(curl -sH 'accept: application/dns-json' "https://cloudflare-dns.com/dns-query?name=$domain&type=A" | jq -r '.Answer[0].data')
+        domain_resolve2=$(curl -sH 'accept: application/dns-json' "https://cloudflare-dns.com/dns-query?name=$domain2&type=A" | jq -r '.Answer[0].data')
     elif [[ $netstack2 == "6" ]]; then 
-        domain_resolve2=$(curl -sH 'accept: application/dns-json' "https://cloudflare-dns.com/dns-query?name=$domain&type=AAAA" | jq -r '.Answer[0].data')
+        domain_resolve2=$(curl -sH 'accept: application/dns-json' "https://cloudflare-dns.com/dns-query?name=$domain2&type=AAAA" | jq -r '.Answer[0].data')
     else
-        domain_resolve2=$(curl -sH 'accept: application/dns-json' "https://cloudflare-dns.com/dns-query?name=$domain&type=A" | jq -r '.Answer[0].data')
+        domain_resolve2=$(curl -sH 'accept: application/dns-json' "https://cloudflare-dns.com/dns-query?name=$domain2&type=A" | jq -r '.Answer[0].data')
         if [[ "$domain_resolve2" != "null" ]]; then
             netstack2="4"
         else
-            domain_resolve2=$(curl -sH 'accept: application/dns-json' "https://cloudflare-dns.com/dns-query?name=$domain&type=AAAA" | jq -r '.Answer[0].data')            
+            domain_resolve2=$(curl -sH 'accept: application/dns-json' "https://cloudflare-dns.com/dns-query?name=$domain2&type=AAAA" | jq -r '.Answer[0].data')            
             if [[ "$domain_resolve2" != "null" ]]; then
                 netstack2="6"
             fi
@@ -381,21 +381,21 @@ fi
 
 
     if [[ $netstack2 == "4" ]]; then
-        ip=$(curl -4 -s https://api.myip.la)
+        ip2=$(curl -4 -s https://api.myip.la)
     elif [[ $netstack2 == "6" ]]; then 
-        ip=$(curl -6 -s https://api.myip.la)
+        ip2=$(curl -6 -s https://api.myip.la)
     else
-        ip=$(curl -s https://api.myip.la)
+        ip2=$(curl -s https://api.myip.la)
     fi
 
-    if [[ $domain_resolve2 != $ip ]]; then
+    if [[ $domain_resolve2 != $ip2 ]]; then
         echo
         echo -e "$red 域名解析错误Domain resolution error....$none"
         echo
-        echo -e " 你的域名: $yellow$domain$none 未解析到: $cyan$ip$none"
+        echo -e " 你的域名: $yellow$domain2$none 未解析到: $cyan$ip2$none"
         echo
         if [[ $domain_resolve2 != "null" ]]; then
-            echo -e " 你的域名当前解析到: $cyan$domain_resolve$none"
+            echo -e " 你的域名当前解析到: $cyan$domain_resolve2$none"
         else
             echo -e " $red检测不到域名解析Domain not resolved $none "
         fi
