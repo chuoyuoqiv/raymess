@@ -29,7 +29,7 @@ echo -e "$yellow此脚本仅兼容于Debian 10+系统. 如果你的系统不符�
 echo "本脚本支持带参数执行, 在参数中输入域名, 网络栈, UUID, path. 详见GitHub."
 echo "----------------------------------------------------------------"
 
-# 执行脚本带参数install.sh) DOMAIN 6 UUID path
+#################### 执行脚本带参数install.sh) DOMAIN 6 UUID path
 if [ $# -ge 1 ]; then
 
     # 第1个参数是域名
@@ -80,7 +80,7 @@ if [ $# -ge 1 ]; then
 
     #第7个参数是第二个UUID
     v2ray_id2=${7}
-    if [[ -z $v2ray_id ]]; then
+    if [[ -z $v2ray_id2 ]]; then
         v2ray_id2=$(cat /proc/sys/kernel/random/uuid)
     fi
         
@@ -88,7 +88,7 @@ if [ $# -ge 1 ]; then
 
     #第8个参数是path
     path2=${8}
-    if [[ -z $path ]]; then 
+    if [[ -z $path2 ]]; then 
         path2=$(echo $v2ray_id | sed 's/.*\([a-z0-9]\{12\}\)$/\1/g')
     fi
 
