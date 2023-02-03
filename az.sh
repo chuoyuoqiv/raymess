@@ -78,7 +78,7 @@ if [ $# -ge 1 ]; then
         ;;    
     esac
 
-    #第7个参数是第二个UUID
+    #第7个参数是第二个UUID2
     v2ray_id2=${7}
     if [[ -z $v2ray_id2 ]]; then
         v2ray_id2=$(cat /proc/sys/kernel/random/uuid)
@@ -86,7 +86,7 @@ if [ $# -ge 1 ]; then
         
     v2ray_port2=$(shuf -i20001-65535 -n1)
 
-    #第8个参数是path
+    #第8个参数是path2
     path2=${8}
     if [[ -z $path2 ]]; then 
         path2=$(echo $v2ray_id | sed 's/.*\([a-z0-9]\{12\}\)$/\1/g')
@@ -108,6 +108,7 @@ if [ $# -ge 1 ]; then
     echo -e "v2ray_port: ${v2ray_port}"
     echo -e "path: ${path}"
     echo -e "proxy_site: ${proxy_site}"
+	
 	echo -e "domain2: ${domain2}"
     echo -e "netstack2: ${netstack2}"
     echo -e "v2ray_id2: ${v2ray_id2}"
@@ -293,10 +294,10 @@ if [[ -z $domain2 ]]; then
         echo
         echo -e "请输入一个 ${magenta}正确的域名${none} Input your domain"
         read -p "(例如: mydomain.com): " domain2
-        [ -z "$domain" ] && error && continue
+        [ -z "$domain2" ] && error && continue
         echo
         echo
-        echo -e "$yellow 你的域名Domain = $cyan$domain$none"
+        echo -e "$yellow 你的域名Domain = $cyan$domain2$none"
         echo "----------------------------------------------------------------"
         break
     done
@@ -328,16 +329,16 @@ if [[ -z $netstack ]]; then
     echo "如果你不懂这段话是什么意思, 请直接回车"
     read -p "$(echo -e "Input ${cyan}4${none} for IPv4, ${cyan}6${none} for IPv6:") " netstack2
     if [[ $netstack2 == "4" ]]; then
-        domain_resolve=$(curl -sH 'accept: application/dns-json' "https://cloudflare-dns.com/dns-query?name=$domain&type=A" | jq -r '.Answer[0].data')
+        domain_resolve2=$(curl -sH 'accept: application/dns-json' "https://cloudflare-dns.com/dns-query?name=$domain&type=A" | jq -r '.Answer[0].data')
     elif [[ $netstack2 == "6" ]]; then 
-        domain_resolve=$(curl -sH 'accept: application/dns-json' "https://cloudflare-dns.com/dns-query?name=$domain&type=AAAA" | jq -r '.Answer[0].data')
+        domain_resolve2=$(curl -sH 'accept: application/dns-json' "https://cloudflare-dns.com/dns-query?name=$domain&type=AAAA" | jq -r '.Answer[0].data')
     else
-        domain_resolve=$(curl -sH 'accept: application/dns-json' "https://cloudflare-dns.com/dns-query?name=$domain&type=A" | jq -r '.Answer[0].data')
-        if [[ "$domain_resolve" != "null" ]]; then
+        domain_resolve2=$(curl -sH 'accept: application/dns-json' "https://cloudflare-dns.com/dns-query?name=$domain&type=A" | jq -r '.Answer[0].data')
+        if [[ "$domain_resolve2" != "null" ]]; then
             netstack2="4"
         else
-            domain_resolve=$(curl -sH 'accept: application/dns-json' "https://cloudflare-dns.com/dns-query?name=$domain&type=AAAA" | jq -r '.Answer[0].data')            
-            if [[ "$domain_resolve" != "null" ]]; then
+            domain_resolve2=$(curl -sH 'accept: application/dns-json' "https://cloudflare-dns.com/dns-query?name=$domain&type=AAAA" | jq -r '.Answer[0].data')            
+            if [[ "$domain_resolve2" != "null" ]]; then
                 netstack2="6"
             fi
         fi
@@ -379,6 +380,39 @@ if [[ -z $netstack ]]; then
 fi
 
 
+    if [[ $netstack2 == "4" ]]; then
+        ip=$(curl -4 -s https://api.myip.la)
+    elif [[ $netstack2 == "6" ]]; then 
+        ip=$(curl -6 -s https://api.myip.la)
+    else
+        ip=$(curl -s https://api.myip.la)
+    fi
+
+    if [[ $domain_resolve2 != $ip ]]; then
+        echo
+        echo -e "$red 域名解析错误Domain resolution error....$none"
+        echo
+        echo -e " 你的域名: $yellow$domain$none 未解析到: $cyan$ip$none"
+        echo
+        if [[ $domain_resolve2 != "null" ]]; then
+            echo -e " 你的域名当前解析到: $cyan$domain_resolve$none"
+        else
+            echo -e " $red检测不到域名解析Domain not resolved $none "
+        fi
+        echo
+        echo -e "备注...如果你的域名是使用$yellow Cloudflare $none解析的话... 在 DNS 设置页面, 请将$yellow代理状态$none设置为$yellow仅限DNS$none, 小云朵变灰."
+        echo "Notice...If you use Cloudflare to resolve your domain, on 'DNS' setting page, 'Proxy status' should be 'DNS only' but not 'Proxied'."
+        echo
+        exit 1
+    else
+        echo
+        echo
+        echo -e "$yellow 域名解析 = ${cyan}我确定已经有解析了$none"
+        echo "----------------------------------------------------------------"
+        echo
+    fi
+fi
+
 
 
 
@@ -413,11 +447,11 @@ fi
 
 
 if [[ -z $path2 ]]; then
-    default_path2=$(echo $v2ray_id | sed 's/.*\([a-z0-9]\{12\}\)$/\1/g')
+    default_path2=$(echo $v2ray_id2 | sed 's/.*\([a-z0-9]\{12\}\)$/\1/g')
     while :; do
         echo -e "请输入想要 ${magenta} 用来分流的路径 $none , 例如 /v2raypath , 那么只需要输入 v2raypath 即可"
         echo "Input the WebSocket path for V2ray"
-        read -p "$(echo -e "(默认path: [${cyan}${default_path}$none]):")" path2
+        read -p "$(echo -e "(默认path: [${cyan}${default_path2}$none]):")" path2
         [[ -z $path2 ]] && path=$default_path2
 
         case $path2 in
@@ -430,7 +464,7 @@ if [[ -z $path2 ]]; then
         *)
             echo
             echo
-            echo -e "$yellow 分流的路径Path = ${cyan}/${path}$none"
+            echo -e "$yellow 分流的路径Path2 = ${cyan}/${path2}$none"
             echo "----------------------------------------------------------------"
             echo
             break
@@ -505,8 +539,7 @@ cat >/usr/local/etc/v2ray/config.json <<-EOF
                     "tls"
                 ]
             }
-        }
-    ],
+        },
         {
             "listen": "127.0.0.1",
             "port": $v2ray_port2,             // ***
