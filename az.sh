@@ -187,7 +187,7 @@ if [[ -z $v2ray_id2 ]]; then
     while :; do
         echo -e "请输入 "$yellow"V2RayID"$none" "
         read -p "$(echo -e "(默认ID: ${cyan}${uuid2}$none):")" v2ray_id2
-        [ -z "$v2ray_id2" ] && v2ray_id2=$uuid
+        [ -z "$v2ray_id2" ] && v2ray_id2=$uuid2
         case $(echo $v2ray_id2 | sed 's/[a-z0-9]\{8\}-[a-z0-9]\{4\}-[a-z0-9]\{4\}-[a-z0-9]\{4\}-[a-z0-9]\{12\}//g') in
         "")
             echo
