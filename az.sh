@@ -672,8 +672,8 @@ $domain, $domain2
 	handle_path /$path2 {
         reverse_proxy localhost:$v2ray_port2
     }
-	handle_path /$path3 {
-        reverse_proxy localhost:$v2ray_port3
+	handle_path /path3 {
+        reverse_proxy localhost:3333
     }
     handle {
         reverse_proxy https://www.tiktok.com {
