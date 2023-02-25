@@ -29,7 +29,7 @@ echo -e "$yellow此脚本仅兼容于Debian 10+系统. 如果你的系统不符�
 echo "本脚本支持带参数执行, 在参数中输入域名, 网络栈, UUID, path. 详见GitHub."
 echo "----------------------------------------------------------------"
 
-#################### 执行脚本带参数install.sh) DOMAIN 6 UUID path
+# 执行脚本带参数install.sh) DOMAIN 6 UUID path
 if [ $# -ge 1 ]; then
 
     # 第1个参数是域名
@@ -92,14 +92,6 @@ if [ $# -ge 1 ]; then
         path2=$(echo $v2ray_id | sed 's/.*\([a-z0-9]\{12\}\)$/\1/g')
     fi
 
-	
-	
-	
-	
-	
-	
-	
-
     proxy_site="https://www.tiktok.com"
 
     echo -e "domain: ${domain}"
@@ -117,6 +109,20 @@ if [ $# -ge 1 ]; then
     echo -e "proxy_site: ${proxy_site}"
 fi
 
+    echo -e "domain: ${domain}"
+    echo -e "netstack: ${netstack}"
+    echo -e "v2ray_id: ${v2ray_id}"
+    echo -e "v2ray_port: ${v2ray_port}"
+    echo -e "path: ${path}"
+    echo -e "proxy_site: ${proxy_site}"
+	
+	echo -e "domain2: ${domain2}"
+    echo -e "netstack2: ${netstack2}"
+    echo -e "v2ray_id2: ${v2ray_id2}"
+    echo -e "v2ray_port2: ${v2ray_port2}"
+    echo -e "path2: ${path2}"
+    echo -e "proxy_site: ${proxy_site}"
+	
 pause
 
 # 准备工作
