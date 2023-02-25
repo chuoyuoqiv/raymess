@@ -108,20 +108,6 @@ if [ $# -ge 1 ]; then
     echo -e "path2: ${path2}"
     echo -e "proxy_site: ${proxy_site}"
 fi
-
-    echo -e "domain: ${domain}"
-    echo -e "netstack: ${netstack}"
-    echo -e "v2ray_id: ${v2ray_id}"
-    echo -e "v2ray_port: ${v2ray_port}"
-    echo -e "path: ${path}"
-    echo -e "proxy_site: ${proxy_site}"
-	
-	echo -e "domain2: ${domain2}"
-    echo -e "netstack2: ${netstack2}"
-    echo -e "v2ray_id2: ${v2ray_id2}"
-    echo -e "v2ray_port2: ${v2ray_port2}"
-    echo -e "path2: ${path2}"
-    echo -e "proxy_site: ${proxy_site}"
 	
 pause
 
@@ -670,7 +656,7 @@ $domain, $domain2
 {
     tls Y3JhenlwdddZQ@gmail.com
     encode gzip
-    多用户 多path
+    #多用户 多path
     import Caddyfile.multiuser	
     handle_path /$path {
         reverse_proxy localhost:$v2ray_port
