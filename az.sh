@@ -725,7 +725,74 @@ echo -e "$yellow 伪装域名 (host) = ${cyan}${domain}$none"
 echo -e "$yellow 路径 (path) = ${cyan}/${path}$none"
 echo -e "$yellow 底层传输安全 (TLS) = ${cyan}tls$none"
 echo
+echo "---------- V2Ray VLESS URL ----------"
+v2ray_vless_url="vless://${v2ray_id}@${domain}:443?encryption=none&security=tls&type=ws&host=${domain}&path=${path}#VLESS_WSS_${domain}"
+echo -e "${cyan}${v2ray_vless_url}${none}"
+echo
+sleep 3
+echo "以下两个二维码完全一样的内容"
+qrencode -t UTF8 $v2ray_vless_url
+qrencode -t ANSI $v2ray_vless_url
+echo
+echo "---------- END -------------"
+echo "以上节点信息保存在 ~/_v2ray_vless_url_ 中"
 
+# 节点信息保存到文件中
+echo $v2ray_vless_url > ~/_v2ray_vless_url_
+echo "以下两个二维码完全一样的内容" >> ~/_v2ray_vless_url_
+qrencode -t UTF8 $v2ray_vless_url >> ~/_v2ray_vless_url_
+qrencode -t ANSI $v2ray_vless_url >> ~/_v2ray_vless_url_
+
+# 是否切换为vmess协议
+echo 
+echo -e "切换成${magenta}Vmess${none}协议吗? Switch to ${magenta}Vmess${none} protocol?"
+echo "如果你不懂这段话是什么意思, 请直接回车"
+read -p "$(echo -e "(${cyan}y/N${none} Default No):") " switchVmess
+if [[ -z "$switchVmess" ]]; then
+    switchVmess='N'
+fi
+if [[ "$switchVmess" == [yY] ]]; then
+    # config.json文件中, 替换vless为vmess
+    sed -i "s/vless/vmess/g" /usr/local/etc/v2ray/config.json
+    service v2ray restart
+    
+    #生成vmess链接和二维码
+    echo "---------- V2Ray Vmess URL ----------"
+    v2ray_vmess_url="vmess://$(echo -n "\
+{\
+\"v\": \"2\",\
+\"ps\": \"Vmess_WSS_${domain}\",\
+\"add\": \"${domain}\",\
+\"port\": \"443\",\
+\"id\": \"${v2ray_id}\",\
+\"aid\": \"0\",\
+\"net\": \"ws\",\
+\"type\": \"none\",\
+\"host\": \"${domain}\",\
+\"path\": \"${path}\",\
+\"tls\": \"tls\"\
+}"\
+    | base64 -w 0)"
+
+    echo -e "${cyan}${v2ray_vmess_url}${none}"
+    echo "以下两个二维码完全一样的内容"
+    qrencode -t UTF8 $v2ray_vmess_url
+    qrencode -t ANSI $v2ray_vmess_url
+
+    echo
+    echo "---------- END -------------"
+    echo "以上节点信息保存在 ~/_v2ray_vmess_url_ 中"
+
+    echo $v2ray_vmess_url > ~/_v2ray_vmess_url_
+    echo "以下两个二维码完全一样的内容" >> ~/_v2ray_vmess_url_
+    qrencode -t UTF8 $v2ray_vmess_url >> ~/_v2ray_vmess_url_
+    qrencode -t ANSI $v2ray_vmess_url >> ~/_v2ray_vmess_url_
+    
+elif [[ "$switchVmess" == [nN] ]]; then
+    echo
+else
+    error
+fi
 
 # 如果是 IPv6 小鸡，用 WARP 创建 IPv4 出站
 if [[ $netstack == "6" ]]; then
@@ -755,10 +822,7 @@ elif  [[ $netstack == "4" ]]; then
     echo
     echo -e "$yellow这是一个 IPv4 小鸡，用 WARP 创建 IPv6 出站$none"
     echo -e "有些热门小鸡用原生的IPv4出站访问Google需要通过人机验证, 可以通过修改config.json指定google流量走WARP的IPv6出站解决"
-    echo -e "群组: ${cyan} https://t.me/+D8aqonnCR3s1NTRl ${none}"
-    echo -e "教程: ${cyan} https://zelikk.blogspot.com/2022/03/racknerd-v2ray-cloudflare-warp--ipv6-google-domainstrategy-outboundtag-routing.html ${none}"
-    echo -e "视频: ${cyan} https://youtu.be/Yvvm4IlouEk ${none}"
-    echo "----------------------------------------------------------------"
+
     pause
 
     # 安装 WARP IPv6
@@ -781,7 +845,8 @@ fi
     iptables -P FORWARD ACCEPT
     iptables -P OUTPUT ACCEPT
     iptables -F
-	ufw allow 80
+    ufw allow 80
     ufw allow 443
-	service caddy restart
+    service caddy restart
     service v2ray restart
+	
